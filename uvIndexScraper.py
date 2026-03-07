@@ -6,9 +6,11 @@ import csv
 state = ""
 city = input("Enter a city: ")
 city = city.upper()
-if city == 'PORTLAND' or city == 'CHARLESTON':
+if city == "PORTLAND" or city == "CHARLESTON":
     state = input("Enter state abbreviation: ")
     state = state.upper()
+
+year = input("Enter year: ")
 
 start = time.time()
 
@@ -18,7 +20,8 @@ monthDays = {"Jan" : 31, "Feb" : 28, "Mar" : 31, "Apr" : 30, "May" : 31, "Jun" :
 numericMonth = {"Jan" : "01", "Feb" : "02", "Mar" : "03", "Apr" : "04", "May" : "05", "Jun" : "06", 
              "Jul" : "07", "Aug" : "08", "Sep" : "09", "Oct" : "10", "Nov" : "11", "Dec" : "12"}
 
-with open("DailyUVIndexData2014.csv", "w", newline='') as csv_file:
+filename = "DailyUVIndexData" + year + city + state + ".csv"
+with open(filename, "w", newline='') as csv_file:
     csv_writer = csv.writer(csv_file)
     csv_writer.writerow(["Month", "Day", "UVIndex"])
 
@@ -31,11 +34,11 @@ with open("DailyUVIndexData2014.csv", "w", newline='') as csv_file:
         for day in range(1, numDays + 1):
             print(day, end = " ", flush=True)
             if day < 10:
-                url = 'https://www.cpc.ncep.noaa.gov/products/stratosphere/uv_index/Bulletin/2014/uv.2014' + numMonth + '0' + str(day) + '12.uvbull'
+                url = "https://www.cpc.ncep.noaa.gov/products/stratosphere/uv_index/Bulletin/" + year + "/uv." + year + numMonth + "0" + str(day) + "12.uvbull"
             if day >= 10:
-                url = 'https://www.cpc.ncep.noaa.gov/products/stratosphere/uv_index/Bulletin/2014/uv.2014' + numMonth + str(day) + '12.uvbull'
+                url = "https://www.cpc.ncep.noaa.gov/products/stratosphere/uv_index/Bulletin/" + year + "/uv." + year + numMonth + str(day) + "12.uvbull"
             req = requests.get(url)
-            soup = BeautifulSoup(req.content, 'html.parser')
+            soup = BeautifulSoup(req.content, "html.parser")
             indexCity = soup.text.find(city)
             fullLine = soup.text[indexCity:indexCity + 29] #bulletin lines are of set length
             
@@ -53,4 +56,4 @@ with open("DailyUVIndexData2014.csv", "w", newline='') as csv_file:
 
 end = time.time()
 
-print((end - start), ' seconds')
+print((end - start), " seconds")
